@@ -1,0 +1,20 @@
+import numpy as np
+import cv2
+
+def calcular_linea_promedio(lineas):
+    x_coords = []
+    y_coords = []
+    for linea in lineas:
+        x_coords.extend([linea[0][0], linea[0][2]])
+        y_coords.extend([linea[0][1], linea[0][3]])
+    if len(x_coords) == 0:
+        return None
+    coeficientes = np.polyfit(y_coords, x_coords, 1)
+    pendiente = coeficientes[0]
+    intercepto = coeficientes[1]
+    return pendiente, intercepto
+
+def dibujar_linea_extrapolada(frame, pendiente, intercepto, y1, y2, color, grosor):
+    x1 = int(pendiente * y1 + intercepto)
+    x2 = int(pendiente * y2 + intercepto)
+    cv2.line(frame, (x1, y1), (x2, y2), color, grosor)
